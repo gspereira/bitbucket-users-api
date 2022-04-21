@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 
+//Get user input for path
 static string GetPathInput()
 {
     // Ask for the file path
@@ -7,13 +8,15 @@ static string GetPathInput()
 
     string path = Console.ReadLine();
 
-    // Repeat the method until path is not null
-    if (path == null)
+    while (path == null || path.Length == 0)
     {
         Console.WriteLine("Invalid Path");
-        return GetPathInput();
+        Console.WriteLine("Inform the file path:");
+
+        path = Console.ReadLine();
     }
-    else return path;
+
+    return path;
 }
 
 //Make the API call to get the user data
@@ -75,8 +78,15 @@ if (CheckTimeSinceLastRun(fullPath))
     // Read the path for the file
     string path = GetPathInput();
 
+    //Check if file exists in informed path
+    while(!File.Exists(path))
+    {
+        Console.WriteLine("File not Found");
+        path = GetPathInput();
+    }
+
     //Get the file using the informed path
-    string[] users = System.IO.File.ReadAllLines(path);
+    string[] users = File.ReadAllLines(path);
     string fileContent = "";
 
     Console.WriteLine("Reading: ");

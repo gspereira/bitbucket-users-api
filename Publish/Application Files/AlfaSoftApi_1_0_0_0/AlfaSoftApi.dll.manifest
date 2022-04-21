@@ -62,22 +62,22 @@
       <dsig:DigestValue>731tkScnp73bSnxb4SRcWDR6a8G+crFqiX5QlFQe5xg=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="AlfaSoftApi.dll" size="10240">
+  <file name="AlfaSoftApi.dll" size="9728">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>Gcn5HRkQXDc1dcC+Tq75f+Annoe8ta10EKYaImt5Cu8=</dsig:DigestValue>
+      <dsig:DigestValue>00JFfuG5oxa+clk51LxtopJEhK8/5Q6N3rHNhtrkq5k=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="AlfaSoftApi.exe" size="149504">
+  <file name="AlfaSoftApi.exe" size="148992">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>vlC0RDlNPCp+rvQDHld5OI2A7DeJ0BqSw66mkwE8fY8=</dsig:DigestValue>
+      <dsig:DigestValue>IM8377SbziFhs7ulOjPyXwZpcmYHiK9dveAc705m+T8=</dsig:DigestValue>
     </hash>
   </file>
   <file name="AlfaSoftApi.runtimeconfig.json" size="253">
