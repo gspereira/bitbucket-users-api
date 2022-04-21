@@ -1,5 +1,21 @@
 ﻿using Newtonsoft.Json;
 
+static string GetPathInput()
+{
+    // Ask for the file path
+    Console.WriteLine("Inform the file path:");
+
+    string path = Console.ReadLine();
+
+    // Repeat the method until path is not null
+    if (path == null)
+    {
+        Console.WriteLine("Invalid Path");
+        return GetPathInput();
+    }
+    else return path;
+}
+
 //Make the API call to get the user data
 static async Task<HttpResponseMessage> GetUserData(string baseUrl, string user)
 {
@@ -18,12 +34,8 @@ static string AddToFile(string fileContent, string user, string obj)
 }
 
 //Save all content to a file
-static void SaveFile(string fileContent)
+static void SaveFile(string fileContent, string fullPath)
 {
-    string relativePath = Directory.GetCurrentDirectory();
-    string fileName = "users.log";
-    string fullPath = Path.Combine(relativePath, fileName);
-
     //Delete old instance of log file
     if (File.Exists(fullPath))
         File.Delete(fullPath);
@@ -31,20 +43,41 @@ static void SaveFile(string fileContent)
         File.Create(fullPath);
 
     using StreamWriter wr = new StreamWriter(fullPath);
+    wr.Write($"{DateTime.Now}{Environment.NewLine}{Environment.NewLine}");
     wr.Write(fileContent);
     wr.Close();
 }
 
-// Ask for the file path
-Console.WriteLine("Inform the file path:");
-
-// Read the path for the file
-string path = Console.ReadLine();
-
-if (path != null)
+//Check if code has not run in the last 60 seconds
+static Boolean CheckTimeSinceLastRun(string fullPath)
 {
-    //API BaseUrl
-    string baseUrl = "https://api.bitbucket.org/2.0/users/";
+    //Read first line of file, where the last run dateTime is stored
+    //than, compares it to the current dateTime.
+    if (File.Exists(fullPath))
+    {
+        DateTime lastRun = DateTime.Parse(File.ReadLines(fullPath).First());
+        DateTime now = DateTime.Now;
+        var diffDates = now - lastRun;
+        return diffDates.TotalSeconds > 60 ? true : false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+//Log file path
+string relativePath = Directory.GetCurrentDirectory();
+string fileName = "users.log";
+string fullPath = Path.Combine(relativePath, fileName);
+
+//API BaseUrl
+string baseUrl = "https://api.bitbucket.org/2.0/users/";
+
+if (CheckTimeSinceLastRun(fullPath))
+{
+    // Read the path for the file
+    string path = GetPathInput();
 
     //Get the file using the informed path
     string[] users = System.IO.File.ReadAllLines(path);
@@ -55,9 +88,9 @@ if (path != null)
     foreach (string user in users)
     {
         Console.WriteLine($"{user} - {baseUrl}{user}");
-        var data = await GetUserData(baseUrl,user);
+        var data = await GetUserData(baseUrl, user);
 
-        if(data.IsSuccessStatusCode)
+        if (data.IsSuccessStatusCode)
             fileContent = AddToFile(fileContent, user, JsonConvert.SerializeObject(data.Content.ReadAsStringAsync()));
         else
             fileContent = AddToFile(fileContent, user, data.ReasonPhrase);
@@ -65,7 +98,7 @@ if (path != null)
         await Task.Delay(5000);
     }
 
-    SaveFile(fileContent);
+    SaveFile(fileContent, fullPath);
 
     //5 seconds countdown
     Console.WriteLine("Ending in: ");
@@ -75,4 +108,12 @@ if (path != null)
         await Task.Delay(1000);
     }
 }
-else Console.WriteLine("Invalid Path");
+else Console.WriteLine("Already ran in the last 60 seconds");
+
+
+
+
+
+
+
+
