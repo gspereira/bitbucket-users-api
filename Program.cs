@@ -42,9 +42,8 @@ static void SaveFile(string fileContent, string fullPath)
     else
         File.Create(fullPath);
 
-    using StreamWriter wr = new StreamWriter(fullPath);
-    wr.Write($"{DateTime.Now}{Environment.NewLine}{Environment.NewLine}");
-    wr.Write(fileContent);
+    using StreamWriter wr = new(fullPath);
+    wr.Write($"{DateTime.Now}{Environment.NewLine}{Environment.NewLine} {fileContent}");
     wr.Close();
 }
 
@@ -53,17 +52,14 @@ static Boolean CheckTimeSinceLastRun(string fullPath)
 {
     //Read first line of file, where the last run dateTime is stored
     //than, compares it to the current dateTime.
-    if (File.Exists(fullPath))
+    if (File.Exists(fullPath) && new FileInfo(fullPath).Length > 0)
     {
         DateTime lastRun = DateTime.Parse(File.ReadLines(fullPath).First());
         DateTime now = DateTime.Now;
         var diffDates = now - lastRun;
         return diffDates.TotalSeconds > 60 ? true : false;
     }
-    else
-    {
-        return true;
-    }
+    else return true;
 }
 
 //Log file path
@@ -110,10 +106,5 @@ if (CheckTimeSinceLastRun(fullPath))
 }
 else Console.WriteLine("Already ran in the last 60 seconds");
 
-
-
-
-
-
-
-
+Console.WriteLine("Press any key to close...");
+Console.ReadKey();
